@@ -27,6 +27,7 @@ telaLogin=uic.loadUi("loginInfarma.ui")
 telaPrincipal=uic.loadUi("telaPrincipal.ui")
 telaProdutIns=uic.loadUi("telaProdutIns.ui")
 telaNotif=uic.loadUi("notification.ui")
+telaRemov=uic.loadUi("telaAtencao.ui")
 telaPrincipal.tableWidget.setColumnWidth(0,110)
 telaPrincipal.tableWidget.setColumnWidth(1,525)
 telaPrincipal.tableWidget.setColumnWidth(2,140)
@@ -341,7 +342,7 @@ def valida_produt():
         logging.warning(e)
 
 def removeProdut():
-    print('Remover')
+    telaRemov.show()
 
 def editProdut():
     print("Alterar")
