@@ -218,7 +218,7 @@ background-color: rgb(238, 238, 238);</string>
        <item>
         <widget class="QFrame" name="frame_3">
          <property name="enabled">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
          <property name="styleSheet">
           <string notr="true">background-color: rgb(20, 36, 76);</string>
@@ -263,6 +263,9 @@ background-color: rgb(238, 238, 238);</string>
           </item>
           <item>
            <widget class="QPushButton" name="btnAdd">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="font">
              <font>
               <family>Arial Black</family>
@@ -295,6 +298,9 @@ background-color: rgb(238, 238, 238);</string>
           </item>
           <item>
            <widget class="QPushButton" name="btnEdit">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="styleSheet">
              <string notr="true">background-color:rgb(242, 242, 242)</string>
             </property>
@@ -315,6 +321,9 @@ background-color: rgb(238, 238, 238);</string>
           </item>
           <item>
            <widget class="QPushButton" name="btnRemove">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="styleSheet">
              <string notr="true">background-color:rgb(242, 242, 242)</string>
             </property>

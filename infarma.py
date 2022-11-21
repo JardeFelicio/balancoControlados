@@ -28,6 +28,7 @@ telaPrincipal=uic.loadUi("telaPrincipal.ui")
 telaProdutIns=uic.loadUi("telaProdutIns.ui")
 telaNotif=uic.loadUi("notification.ui")
 telaRemov=uic.loadUi("telaAtencao.ui")
+telaUpdate=uic.loadUi("telaProdutUpd.ui")
 telaPrincipal.tableWidget.setColumnWidth(0,110)
 telaPrincipal.tableWidget.setColumnWidth(1,525)
 telaPrincipal.tableWidget.setColumnWidth(2,140)
@@ -37,7 +38,8 @@ telaProdutIns.lineEditCodProdut.setValidator(QtGui.QDoubleValidator())
 telaProdutIns.lineEditQtd.setValidator(QtGui.QIntValidator())
 telaPrincipal.lineEditCodBal.setValidator(QtGui.QIntValidator())
 
-
+cachedRemove = [0,0,0,0,0]
+cachedUpdate = [0,0,0,0,0,0]
 
 
 #Leitura do arquivo ini
@@ -89,14 +91,17 @@ def add_produt(cod_loja,cod_bal,cod_produt,cod_lote,qtd_produt,dat_vctlot):
         cursor.close()
         conn.close()
 
-def update_produt(cod_loja,cod_bal,cod_produt,cod_lote,qtd_produt,dat_vctlot):
+def update_produt(cod_loja,cod_bal,cod_produt,cod_lote,qtd_produt,dat_vctlot,cod_lote_new):
     try:
         conn = connect_db()
         cursor = conn.cursor()
-        sql = (f"UPDATE BALIT  SET Qtd_Produt = {qtd_produt}, Dat_VctLot = '{dat_vctlot}' WHERE Cod_Loja = {cod_loja} AND Num_SeqBal = {cod_bal} AND Cod_Produt = {cod_produt} AND Cod_Lote = '{cod_lote}' AND Cod_Local = 1 AND Num_Contag = 1")
+        sql = (f"UPDATE BALIT  SET Qtd_Produt = {qtd_produt}, Dat_VctLot = '{dat_vctlot}', Cod_Lote = {cod_lote_new} WHERE Cod_Loja = {cod_loja} AND Num_SeqBal = {cod_bal} AND Cod_Produt = {cod_produt} AND Cod_Lote = '{cod_lote}' AND Cod_Local = 1 AND Num_Contag = 1")
         cursor.execute(sql)
         cursor.commit()
         refreshList(cod_bal)
+        sair_update_produt()
+        cachedUpdate= []
+
         
         return
     except Exception as e:
@@ -104,7 +109,7 @@ def update_produt(cod_loja,cod_bal,cod_produt,cod_lote,qtd_produt,dat_vctlot):
     finally:
         cursor.close()
         conn.close()
-
+        
 def delete_produt(cod_loja,cod_bal,cod_produt,cod_lote):
     try:
         conn = connect_db()
@@ -113,11 +118,15 @@ def delete_produt(cod_loja,cod_bal,cod_produt,cod_lote):
         cursor.execute(sql)
         cursor.commit()
         refreshList(cod_bal)
-        
+        print('DELETE')
+        refreshList(cod_bal)
+        sair_remove_produt()
+
         return
     except Exception as e:
         logging.warning(date_time()+e)
     finally:
+        cachedRemove = [0,0,0,0,0]
         cursor.close()
         conn.close()
 
@@ -264,8 +273,8 @@ def valida_cod_bal():
                                                                     border-radius:4px;
                                                                     background-color: rgb(238, 238, 238);""")
                     telaPrincipal.lineEditCodBal.setReadOnly(True)
-                    telaPrincipal.frame_3.setEnabled(True)
-                    telaPrincipal.lineEditCodBal.setEnabled(True)
+                    telaPrincipal.btnAdd.setEnabled(True)
+                    telaPrincipal.lineEditCodBal.setEnabled(False)
                     refreshList(cod_bal)
                     return
             except Exception as e:
@@ -342,13 +351,115 @@ def valida_produt():
         logging.warning(e)
 
 def removeProdut():
-    telaRemov.show()
+    try:
+        
+        #cod_bal= int(telaPrincipal.lineEditCodBal.text()) 
+        cachedRemove[0] = (int(telaPrincipal.lineEditCodBal.text()) )
+        #cod_produt=telaPrincipal.tableWidget.selectionModel().currentIndex().siblingAtColumn(0).data()
+        cachedRemove[1]=telaPrincipal.tableWidget.selectionModel().currentIndex().siblingAtColumn(0).data()
+        #des_produt=telaPrincipal.tableWidget.selectionModel().currentIndex().siblingAtColumn(1).data()
+        cachedRemove[2]=telaPrincipal.tableWidget.selectionModel().currentIndex().siblingAtColumn(1).data()
+        #cod_lote=telaPrincipal.tableWidget.selectionModel().currentIndex().siblingAtColumn(2).data()
+        cachedRemove[3]=telaPrincipal.tableWidget.selectionModel().currentIndex().siblingAtColumn(2).data()
+        telaRemov.label_2.setText(f'{cachedRemove[1]} - {cachedRemove[2]} | {cachedRemove[3]}')
+        telaRemov.show()
+        #on_remove(cod_loja,cod_bal,cod_produt,des_produt,cod_lote)
+        
+    except Exception as e:
+        logging.warning(e)
+        print('Erro 1')
+
+def on_remove():
+    try:
+        if cachedRemove[0] != 0:
+            cod_bal = cachedRemove[0]
+            cod_produt = cachedRemove[1]
+            cod_lote = cachedRemove[3]
+            delete_produt(cod_loja,cod_bal,cod_produt,cod_lote)
+           
+
+
+        else:
+            print('Erro 2.1')
+            return
+        
+
+    except Exception as e:
+        logging.warning(e)
+        print('Erro 2')
 
 def editProdut():
-    print("Alterar")
+    try:
+        
+        #cod_bal
+        cachedUpdate[0] = (str(telaPrincipal.lineEditCodBal.text()) )
+        #cod_produt
+        cachedUpdate[1]=telaPrincipal.tableWidget.selectionModel().currentIndex().siblingAtColumn(0).data()
+        #des_produt
+        cachedUpdate[2]=telaPrincipal.tableWidget.selectionModel().currentIndex().siblingAtColumn(1).data()
+        #cod_lote
+        cachedUpdate[3]=telaPrincipal.tableWidget.selectionModel().currentIndex().siblingAtColumn(2).data()
+        #qtd_produt
+        cachedUpdate[4]=telaPrincipal.tableWidget.selectionModel().currentIndex().siblingAtColumn(3).data()
+        #dat_vctlot
+        cachedUpdate[5]=telaPrincipal.tableWidget.selectionModel().currentIndex().siblingAtColumn(4).data()
+        
+        
+        telaUpdate.lineEditCodProdut.setText(str(cachedUpdate[1]))
+        telaUpdate.lineEditDesc.setText(str(cachedUpdate[2]))
+        telaUpdate.lineEditQtd.setText(str(cachedUpdate[4]))
+        telaUpdate.lineEditLote.setText(str(cachedUpdate[3]))
+        # dataVencimento = (cachedUpdate[5])
+        # vct_year = (dataVencimento[6:10])
+        # vct_month = (dataVencimento[3:5])
+        # vct_day = (dataVencimento[0:2])
+        # dataVct = (f'{vct_year}{vct_month}{vct_day}')
+        # dataAtual = date(dataVct)
+        
+        # print(dataAtual)
+        # telaUpdate.dateEditVenc.setDate(dataAtual)
+        # print(cachedUpdate[5])
+        telaUpdate.show()
+        #on_remove(cod_loja,cod_bal,cod_produt,des_produt,cod_lote)
+        #od_loja,cod_bal,cod_produt,cod_lote,qtd_produt,dat_vctlot)
+    except Exception as e:
+        logging.warning(e)
+        print('Erro AA')
+
+def on_update():
+    try:
+        if cachedUpdate[0] != 0:
+            cod_bal = cachedUpdate[0]
+            cod_produt = cachedUpdate[1]
+            cod_lote = cachedUpdate[3]
+            qtd_produt = cachedUpdate[4]
+            dat_vctlot = str(telaUpdate.dateEditVenc.text())
+            cod_lote_new= telaUpdate.lineEditLote.text()
+
+            
+            update_produt(cod_loja,cod_bal,cod_produt,cod_lote,qtd_produt,dat_vctlot,cod_lote_new)
+           
+
+
+        else:
+            print('Erro on_update')
+            return
+        
+
+    except Exception as e:
+        logging.warning(e)
+        print('Erro 2')
+
+
 
 def sair_produt():
     telaProdutIns.close()
+
+def sair_remove_produt():
+    telaRemov.close()
+
+def sair_update_produt():
+    telaUpdate.close()
 
 #Funções das telas
 def tela_add_produt():
@@ -388,20 +499,58 @@ def tela_produt_close():
 def tela_notif_close():
     telaNotif.close()
 
+
+def on_selectionChanged( selected, deselected):
+    if  selected != []:
+        
+        #self.tb_company.selectionModel().currentIndex().siblingAtColumn(0).data()
+        codigo=telaPrincipal.tableWidget.selectionModel().currentIndex().siblingAtColumn(0).data()
+        lote=telaPrincipal.tableWidget.selectionModel().currentIndex().siblingAtColumn(2).data()
+        print(codigo)
+        print(lote)
+        for ix in selected.indexes():
+            print('Selected Cell Location Row: {0}, Column: {1}'.format(ix.row(), ix.column()))
+
+        for ix in deselected.indexes():
+            print('Deselected Cell Location Row: {0}, Column: {1}'.format(ix.row(), ix.column()))
+				
+def on_selected(selected):
+    if  selected != []:
+        cod_produt=telaPrincipal.tableWidget.selectionModel().currentIndex().siblingAtColumn(0).data()
+        cod_lote=telaPrincipal.tableWidget.selectionModel().currentIndex().siblingAtColumn(2).data()
+        print(cod_produt)
+        print(cod_lote)
+        telaPrincipal.btnEdit.setEnabled(True)
+        telaPrincipal.btnRemove.setEnabled(True)
+
+
+
+
+
 #Atribui funcoes a interface grafica
 telaLogin.btnEntrar.clicked.connect(valida_login)
 telaLogin.btnEntrar.clicked.connect(valida_login)
+
 telaPrincipal.btnAdd.clicked.connect(tela_add_produt)
 telaPrincipal.btnEdit.clicked.connect(editProdut)
 telaPrincipal.btnRemove.clicked.connect(removeProdut)
+telaPrincipal.tableWidget.selectionModel().selectionChanged.connect(on_selected)
+telaPrincipal.lineEditCodBal.returnPressed.connect(valida_cod_bal)
+
 telaProdutIns.btnAplic.clicked.connect(valida_produt)
 telaProdutIns.btnSair.clicked.connect(valida_produt)
-telaPrincipal.lineEditCodBal.returnPressed.connect(valida_cod_bal)
 telaProdutIns.lineEditCodProdut.returnPressed.connect(valida_codprodut)
 telaProdutIns.btnSair.clicked.connect(sair_produt)
+
 telaNotif.btnClose.clicked.connect(tela_notif_close)
 telaNotif.btnOk.clicked.connect(tela_notif_close)
 
+
+telaRemov.btnYes.clicked.connect(on_remove)
+telaRemov.btnNo.clicked.connect(sair_remove_produt)
+telaRemov.btnClose.clicked.connect(sair_remove_produt)
+
+telaUpdate.btnAtualiz.clicked.connect(on_update)
 #telaProdutIns.setWindowFlags(telaProdutIns.windowFlags() | QtCore.Qt.WindowStaysOnTopHint)
 
 telaLogin.show()

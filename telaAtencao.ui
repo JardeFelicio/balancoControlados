@@ -236,7 +236,7 @@ color: rgb(255,255,255)</string>
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>55</y>
+      <y>40</y>
       <width>350</width>
       <height>21</height>
      </rect>
@@ -260,6 +260,39 @@ color: rgb(255,255,255)</string>
     </property>
     <property name="text">
      <string>Deseja excluir o produto:</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>65</y>
+      <width>350</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>350</width>
+      <height>21</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>350</width>
+      <height>21</height>
+     </size>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string/>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
