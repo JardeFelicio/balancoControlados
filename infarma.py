@@ -58,7 +58,7 @@ except Exception as e:
 
 #realiza conexão com o banco
 try:
-    conn = pyodbc.connect(f'DRIVER={driverOdbc};SERVER={hostName};DATABASE={dataBase};UID=sa;PWD=infarma2015.1;')
+    conn = pyodbc.connect(f'DRIVER={driverOdbc};SERVER={hostName};DATABASE={dataBase};UID=**;PWD=**;')
 except Exception as e:
     logging.warning(date_time()+e)
     telaLogin.labelInfoLogin.setText('')
@@ -73,6 +73,8 @@ def connect_db():
         conn = pyodbc.connect(f'DRIVER={driverOdbc};SERVER={hostName};DATABASE={dataBase};UID=VMDApp;PWD=VMD22041748;')
         return conn
     except Exception as e:
+        s = 'Erro connect_db'
+        logging.warning(date_time()+s)
         logging.warning(date_time()+e)
 
 def add_produt(cod_loja,cod_bal,cod_produt,cod_lote,qtd_produt,dat_vctlot):
@@ -86,6 +88,8 @@ def add_produt(cod_loja,cod_bal,cod_produt,cod_lote,qtd_produt,dat_vctlot):
         
         return
     except Exception as e:
+        s = 'Erro add_produt'
+        logging.warning(date_time()+s)
         logging.warning(date_time()+e)
     finally:
         cursor.close()
@@ -105,6 +109,8 @@ def update_produt(cod_loja,cod_bal,cod_produt,cod_lote,qtd_produt,dat_vctlot,cod
         
         return
     except Exception as e:
+        s = 'Erro update_produt'
+        logging.warning(date_time()+s)
         logging.warning(date_time()+e)
     finally:
         cursor.close()
@@ -124,6 +130,8 @@ def delete_produt(cod_loja,cod_bal,cod_produt,cod_lote):
 
         return
     except Exception as e:
+        s = 'Erro delete_produt'
+        logging.warning(date_time()+s)
         logging.warning(date_time()+e)
     finally:
         cachedRemove = [0,0,0,0,0]
@@ -147,6 +155,8 @@ def consulta_produt_balit(cod_produt,cod_lote, cod_bal):
             print(date_time()+'Inalido -Consulta Produto Balit')
             return is_valid
     except Exception as e:
+        s = 'Erro consulta_produt_balit'
+        logging.warning(date_time()+s)
         logging.warning(date_time()+e)
     finally:
         cursor.close()
@@ -162,6 +172,8 @@ def consulta_produt(cod_produt):
         result=cursor.fetchall()
         return result
     except Exception as e:
+        s = 'Erro consulta_produt'
+        logging.warning(date_time()+s)
         logging.warning(date_time()+e)
         return result
     finally:
@@ -178,6 +190,8 @@ def list_produt(cod_bal):
         rows = cursor.fetchall()
         return rows
     except Exception as e:
+        s = 'Erro list_produt'
+        logging.warning(date_time()+s)
         logging.warning(date_time()+e)
     finally:
         cursor.close()
@@ -195,6 +209,8 @@ def consulta_bal():
         result = cursor.fetchall()
         return result
     except Exception as e:
+        s = 'Erro consulta_bal'
+        logging.warning(date_time()+s)
         logging.warning(date_time()+e)
 
 
@@ -226,6 +242,8 @@ def valida_login():
         else:
             telaLogin.labelInfoLogin.setText('Usuário ou senha inálidos')    
     except Exception as e:
+        s = 'Erro valida_login'
+        logging.warning(date_time()+s)
         logging.warning(date_time()+e)
     finally:
         cursor.close()
@@ -278,6 +296,8 @@ def valida_cod_bal():
                     refreshList(cod_bal)
                     return
             except Exception as e:
+                s = 'Erro valida_cod_bal_sub'
+                logging.warning(date_time()+s)
                 logging.warning(date_time()+e)
                 
             
@@ -287,6 +307,8 @@ def valida_cod_bal():
         text_on = 'Por favor, preencha um'
         text_two = 'código válido.'
         tela_notif(text_on,text_two)
+        s = 'Erro valida_cod_bal'
+        logging.warning(date_time()+s)
         return
       
 def valida_codprodut():
@@ -320,6 +342,8 @@ def valida_codprodut():
                 tela_notif(text_on,text_two)
                 return
     except Exception as e:
+        s = 'Erro valida_codprodut'
+        logging.warning(date_time()+s)
         logging.warning(date_time()+e)
 
 def valida_produt():
@@ -348,6 +372,8 @@ def valida_produt():
         
 
     except Exception as e:
+        s = 'Erro valida_produt'
+        logging.warning(date_time()+s)
         logging.warning(e)
 
 def removeProdut():
@@ -366,9 +392,10 @@ def removeProdut():
         #on_remove(cod_loja,cod_bal,cod_produt,des_produt,cod_lote)
         
     except Exception as e:
+        s = 'Erro remove_produt'
+        logging.warning(date_time()+s)
         logging.warning(e)
-        print('Erro 1')
-
+        
 def on_remove():
     try:
         if cachedRemove[0] != 0:
@@ -385,8 +412,9 @@ def on_remove():
         
 
     except Exception as e:
+        s = 'Erro on_remove'
+        logging.warning(date_time()+s)
         logging.warning(e)
-        print('Erro 2')
 
 def editProdut():
     try:
@@ -423,9 +451,10 @@ def editProdut():
         #on_remove(cod_loja,cod_bal,cod_produt,des_produt,cod_lote)
         #od_loja,cod_bal,cod_produt,cod_lote,qtd_produt,dat_vctlot)
     except Exception as e:
+        s = 'Erro edit_produt'
+        logging.warning(date_time()+s)
         logging.warning(e)
-        print('Erro AA')
-
+        
 def on_update():
     try:
         if cachedUpdate[0] != 0:
@@ -447,11 +476,10 @@ def on_update():
         
 
     except Exception as e:
+        s = 'Erro on_update'
+        logging.warning(date_time()+s)
         logging.warning(e)
-        print('Erro 2')
-
-
-
+        
 def sair_produt():
     telaProdutIns.close()
 
@@ -467,6 +495,8 @@ def tela_add_produt():
         telaProdutIns.show()
         telaProdutIns.lineEditCodProdut.setFocus()
     except Exception as e:
+        s = 'Erro tela_add_produt'
+        logging.warning(date_time()+s)
         logging.warning(date_time()+e)          
 
 def refreshList(cod_bal):
@@ -482,6 +512,8 @@ def refreshList(cod_bal):
                 item = QtWidgets.QTableWidgetItem(f"{rows[i][j]}")
                 telaPrincipal.tableWidget.setItem(i,j, item)
     except Exception as e:
+        s = 'Erro refresh_list'
+        logging.warning(date_time()+s)
         logging.warning(date_time()+e)
         
 def tela_notif(text_on,text_two):
@@ -498,7 +530,6 @@ def tela_produt_close():
 
 def tela_notif_close():
     telaNotif.close()
-
 
 def on_selectionChanged( selected, deselected):
     if  selected != []:
